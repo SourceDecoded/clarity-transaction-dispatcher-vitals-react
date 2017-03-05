@@ -12,15 +12,14 @@ const styles = {
         left: 0,
         right: 0,
         height: "15%",
-        textAlign: "left"
+        textAlign: "left",
+        color: "rgba(255, 255, 255, 0.85098)"
     },
     headerType: {
         fontSize: "1.2vh",
-        color: "#ddd"
     },
     headerTotal: {
         fontSize: "1.8vh",
-        color: "#ddd"
     },
     main: {
         position: "absolute",
