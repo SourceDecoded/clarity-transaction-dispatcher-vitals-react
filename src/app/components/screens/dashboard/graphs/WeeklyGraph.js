@@ -39,7 +39,7 @@ const styles = {
         textAlign: "center",
         width: "7.142857142857143%",
         color: "rgba(239, 108, 0, .8)",
-        fontSize: "12px",
+        fontSize: "1.4vh",
         position: "absolute",
         bottom: 0
     },
@@ -53,7 +53,7 @@ const styles = {
         position: "absolute",
         textAlign: "right",
         width: "100%",
-        fontSize: "12px",
+        fontSize: "1.4vh",
         color: "rgba(239, 108, 0, .8)"
     },
     column: {

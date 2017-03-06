@@ -32,15 +32,14 @@ const styles = {
     },
     donutInfo: {
         color: "rgb(117, 58, 152",
-        fontSize: "12px",
+        fontSize: "1.4vh",
         position: "absolute",
         bottom: 0,
         width: "100%"
     },
     donutText: {
-        fontSize: "12px",
         fill: "rgba(255, 255, 255, 0.85098)",
-        transform: "translateY(0.25em)"
+        transform: "translateY(0.15em)"
     },
     donutTotal: {
         fontSize: "8px",
@@ -55,6 +54,14 @@ const styles = {
     }
 };
 
+const getHourStrokeDashArray = (hours) => {
+    const hourPercentage = Math.floor((hours / 24) * 100);
+    const remainingHoursPercentage = 100 - hourPercentage;
+    const hourStrokeDashArray = hourPercentage + " " + remainingHoursPercentage;
+
+    return hourStrokeDashArray;
+};
+
 const Uptime = props => {
     return (
         <div style={props.style}>
@@ -65,11 +72,11 @@ const Uptime = props => {
                         <svg width={"100%"} height={"100%"} viewBox={"0 0 40 42"}>
                             <circle cx={"20"} cy={"21"} r={"15.91549430918954"} fill={"transparent"}></circle>
                             <circle cx={"20"} cy={"21"} r={"15.91549430918954"} fill={"transparent"} stroke={"rgba(28, 28, 28, 0.6)"} strokeWidth={"5"}></circle>
-                            <circle cx={"20"} cy={"21"} r={"15.91549430918954"} fill={"transparent"} stroke={"rgb(106, 27, 154)"} strokeWidth={"5"} strokeDasharray={"15 85"} strokeDashoffset={"25"}></circle>
+                            <circle cx={"20"} cy={"21"} r={"15.91549430918954"} fill={"transparent"} stroke={"rgb(106, 27, 154)"} strokeWidth={"5"} strokeDasharray={getHourStrokeDashArray(props.latestUptime.hours)} strokeDashoffset={"25"}></circle>
 
                             <g style={styles.donutText}>
                                 <text style={styles.donutTotal} x="50%" y="50%">
-                                    10
+                                    {props.latestUptime.days}
                                 </text>
                                 <text style={styles.donutLabel} x="50%" y="50%">
                                     DAYS
@@ -79,7 +86,7 @@ const Uptime = props => {
                     </div>
                     <div style={styles.donutInfoContainer}>
                         <div style={styles.donutInfo}>
-                            Sun Mar 05 2017 11:32:42
+                            {props.latestUptime.dateString}
                         </div>
                     </div>
                 </div>

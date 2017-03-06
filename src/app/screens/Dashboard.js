@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import io from "socket.io-client";
+import { connect, } from "react-redux";
+import { getLatestUptime } from "../redux/actions";
 import TransactionGraph from "../components/screens/dashboard/TransactionGraph";
 import Uptime from "../components/screens/dashboard/Uptime";
 
@@ -37,6 +39,12 @@ class Dashboard extends Component {
         super(props);
 
         this.state = {
+            latestUptime: {
+                startDate: null,
+                days: null,
+                hours: null,
+                dateString: null
+            },
             graphData: {
                 weekly: {
                     header: {
@@ -55,9 +63,27 @@ class Dashboard extends Component {
     }
 
     componentWillMount() {
+        this.props.getLatestUptime();
         // this.socket.on("entityRetrieved", data => {
         //     console.log(data);
         // });
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (this.state.latestUptime !== nextProps.uptime) {
+            const startDate = new Date(nextProps.uptime.startDate);
+            const currentDate = new Date();
+            const totalHours = Math.round((currentDate - startDate) / 1000 / 60 / 60);
+
+            this.setState({
+                latestUptime: {
+                    startDate,
+                    days: Math.floor(totalHours / 24),
+                    hours: totalHours % 24,
+                    dateString: startDate.toDateString() + " " + startDate.toLocaleTimeString()
+                }
+            });
+        }
     }
 
     render() {
@@ -66,7 +92,7 @@ class Dashboard extends Component {
                 <div style={styles.container}>
                     <TransactionGraph style={styles.transactionGraph} data={this.state.graphData} />
                     <div style={styles.uptimeContainer}>
-                        <Uptime style={styles.uptime} />
+                        <Uptime style={styles.uptime} latestUptime={this.state.latestUptime} />
                     </div>
                 </div>
             </div>
@@ -74,4 +100,14 @@ class Dashboard extends Component {
     }
 }
 
-export default Dashboard;
+const mapStateToProps = (state) => {
+    return {
+        uptime: state.uptime
+    };
+};
+
+const mapDispatchToProps = {
+    getLatestUptime
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
