@@ -1,44 +1,24 @@
 import React, { Component } from "react";
 import io from "socket.io-client";
+import { CustomRenderAnimation, Timeline, PercentageTimeline } from "clarity-animation";
 import { connect, } from "react-redux";
-import { getLatestUptime } from "../redux/actions";
+import { getLatestUptime, getComponentsCount, getEntitiesCount } from "../redux/actions";
+import { socketMonitorServer } from "../../configs/EnvironmentVariables";
+import { dashboard as styles } from "../css";
 import TransactionGraph from "../components/screens/dashboard/TransactionGraph";
 import Uptime from "../components/screens/dashboard/Uptime";
+import TotalCard from "../components/screens/dashboard/TotalCard";
 
 //TODO: Set min-width and min-height (1200 x 800)
-
-const styles = {
-    container: {
-        position: "relative",
-        width: "100%",
-        height: "100%"
-    },
-    transactionGraph: {
-        position: "absolute",
-        left: 0,
-        backgroundColor: "rgb(35, 35, 36)",
-        height: "40%",
-        width: "65%"
-    },
-    uptimeContainer: {
-        position: "absolute",
-        right: 0,
-        paddingLeft: "24px",
-        width: "35%",
-        height: "40%"
-    },
-    uptime: {
-        backgroundColor: "rgb(35, 35, 36)",
-        height: "100%",
-        padding: "24px"
-    }
-};
 
 class Dashboard extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
+            uptimePercentage: 0,
+            totalEntities: 0,
+            totalComponents: 0,
             latestUptime: {
                 startDate: null,
                 days: null,
@@ -59,21 +39,103 @@ class Dashboard extends Component {
                 }
             }
         }
-        // this.socket = io("127.0.0.1:3006");
+
+        this.socket = io(socketMonitorServer);
+    }
+
+    _getCounts() {
+        this.props.getComponentsCount();
+        this.props.getEntitiesCount();
+    }
+
+    _init() {
+        this.props.getLatestUptime();
+        this._getCounts();
+    }
+
+    _initializeAnimations() {
+        var overshoot = new CustomRenderAnimation({
+            renderer: (values) => {
+                this.setState({
+                    uptimePercentage: values.percentage
+                });
+            },
+            properties: {
+                percentage: {
+                    from: 0,
+                    to: 100
+                }
+            },
+            easing: "linear",
+            duration: 1000
+        });
+
+        var value = new CustomRenderAnimation({
+            renderer: (values) => {
+                this.setState({
+                    uptimePercentage: values.percentage
+                });
+            },
+            properties: {
+                percentage: {
+                    from: 100,
+                    to: 4
+                }
+            },
+            easing: "easeOutExpo",
+            duration: 2000
+        });
+
+        // var timeline = new Timeline();
+        // timeline.add(
+        //     {
+        //         animation: overshoot,
+        //         offset: 0
+        //     }, {
+        //         animation: value,
+        //         offset: 1000
+        //     }
+        // );
+
+        // setTimeout(function(){
+        //     timeline.play();
+        // }, 1500);
+
+        var timeline = new PercentageTimeline(10000);
+        timeline.add(
+            {
+                animation: overshoot,
+                startAt: 0,
+                endAt: 0.5
+            }, {
+                animation: value,
+                startAt: 0.5,
+                endAt: 1
+            }
+        );
+        timeline.play();
     }
 
     componentWillMount() {
-        this.props.getLatestUptime();
-        // this.socket.on("entityRetrieved", data => {
-        //     console.log(data);
-        // });
+        this._init();
+
+        this.socket.on("allTransactions", data => {
+            this._getCounts();
+        });
     }
+    componentDidMount() {
+        this._initializeAnimations();
+    };
 
     componentWillReceiveProps(nextProps) {
-        if (this.state.latestUptime !== nextProps.uptime) {
+        //TODO: Move this functionality to inside of Uptime component.
+        if (this.state.latestUptime !== nextProps.uptime ||
+            this.state.totalEntities !== nextProps.entitiesCount ||
+            this.state.totalComponents !== nextProps.componentsCount) {
+
             const startDate = new Date(nextProps.uptime.startDate);
             const currentDate = new Date();
-            const totalHours = Math.round((currentDate - startDate) / 1000 / 60 / 60);
+            const totalHours = Math.floor((currentDate - startDate) / 1000 / 60 / 60);
 
             this.setState({
                 latestUptime: {
@@ -81,7 +143,9 @@ class Dashboard extends Component {
                     days: Math.floor(totalHours / 24),
                     hours: totalHours % 24,
                     dateString: startDate.toDateString() + " " + startDate.toLocaleTimeString()
-                }
+                },
+                totalComponents: nextProps.componentsCount,
+                totalEntities: nextProps.entitiesCount
             });
         }
     }
@@ -92,7 +156,22 @@ class Dashboard extends Component {
                 <div style={styles.container}>
                     <TransactionGraph style={styles.transactionGraph} data={this.state.graphData} />
                     <div style={styles.uptimeContainer}>
-                        <Uptime style={styles.uptime} latestUptime={this.state.latestUptime} />
+                        <Uptime style={styles.uptime} percentage={this.state.uptimePercentage} latestUptime={this.state.latestUptime} />
+                    </div>
+                    <div style={styles.entitiesGraphContainer}>
+                        <div style={styles.entitiesGraph}></div>
+                    </div>
+                    <div style={styles.componentsGraphContainer}>
+                        <div style={styles.componentsGraph}></div>
+                    </div>
+                    <div style={styles.entitiesTotalContainer}>
+                        <TotalCard style={styles.entitiesTotal} config={{ total: this.state.totalEntities, type: "Entities" }} />
+                    </div>
+                    <div style={styles.componentsTotalContainer}>
+                        <TotalCard style={styles.componentsTotal} config={{ total: this.state.totalComponents, type: "Components" }} />
+                    </div>
+                    <div style={styles.loggerContainer}>
+                        <div style={styles.logger}></div>
                     </div>
                 </div>
             </div>
@@ -102,12 +181,16 @@ class Dashboard extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        uptime: state.uptime
+        uptime: state.uptime,
+        componentsCount: state.componentsCount,
+        entitiesCount: state.entitiesCount
     };
 };
 
 const mapDispatchToProps = {
-    getLatestUptime
+    getLatestUptime,
+    getComponentsCount,
+    getEntitiesCount
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);

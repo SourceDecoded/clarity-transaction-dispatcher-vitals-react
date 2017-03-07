@@ -54,10 +54,15 @@ const styles = {
     }
 };
 
-const getHourStrokeDashArray = (hours) => {
-    const hourPercentage = Math.floor((hours / 24) * 100);
-    const remainingHoursPercentage = 100 - hourPercentage;
-    const hourStrokeDashArray = hourPercentage + " " + remainingHoursPercentage;
+const getHourStrokeDashArray = (percentage) => {
+    // const hourPercentage = Math.floor((hours / 24) * 100);
+    // const remainingHoursPercentage = 100 - hourPercentage;
+    // const hourStrokeDashArray = hourPercentage + " " + remainingHoursPercentage;
+
+    // return hourStrokeDashArray;
+
+    const remainingHoursPercentage = 100 - percentage;
+    const hourStrokeDashArray = percentage + " " + remainingHoursPercentage;
 
     return hourStrokeDashArray;
 };
@@ -66,13 +71,14 @@ const Uptime = props => {
     return (
         <div style={props.style}>
             <div style={styles.container}>
-                <div style={styles.header}>UPTIME</div>
+                <div style={styles.header}>Uptime</div>
                 <div style={styles.centerContent}>
                     <div style={styles.donutContainer}>
                         <svg width={"100%"} height={"100%"} viewBox={"0 0 40 42"}>
                             <circle cx={"20"} cy={"21"} r={"15.91549430918954"} fill={"transparent"}></circle>
                             <circle cx={"20"} cy={"21"} r={"15.91549430918954"} fill={"transparent"} stroke={"rgba(28, 28, 28, 0.6)"} strokeWidth={"5"}></circle>
-                            <circle cx={"20"} cy={"21"} r={"15.91549430918954"} fill={"transparent"} stroke={"rgb(106, 27, 154)"} strokeWidth={"5"} strokeDasharray={getHourStrokeDashArray(props.latestUptime.hours)} strokeDashoffset={"25"}></circle>
+                            <circle cx={"20"} cy={"21"} r={"15.91549430918954"} fill={"transparent"} stroke={"rgb(106, 27, 154)"} strokeWidth={"5"}
+                                strokeDasharray={getHourStrokeDashArray(props.percentage)} strokeDashoffset={"25"}></circle>
 
                             <g style={styles.donutText}>
                                 <text style={styles.donutTotal} x="50%" y="50%">
