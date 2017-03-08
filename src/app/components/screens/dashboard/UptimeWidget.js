@@ -54,20 +54,15 @@ const styles = {
     }
 };
 
-const getHourStrokeDashArray = (percentage) => {
-    // const hourPercentage = Math.floor((hours / 24) * 100);
-    // const remainingHoursPercentage = 100 - hourPercentage;
-    // const hourStrokeDashArray = hourPercentage + " " + remainingHoursPercentage;
-
-    // return hourStrokeDashArray;
-
-    const remainingHoursPercentage = 100 - percentage;
-    const hourStrokeDashArray = percentage + " " + remainingHoursPercentage;
+const getHourStrokeDashArray = (hours) => {
+    const hourPercentage = Math.floor((hours / 24) * 100);
+    const remainingHoursPercentage = 100 - hourPercentage;
+    const hourStrokeDashArray = hourPercentage + " " + remainingHoursPercentage;
 
     return hourStrokeDashArray;
 };
 
-const Uptime = props => {
+const UptimeWidget = props => {
     return (
         <div style={props.style}>
             <div style={styles.container}>
@@ -78,11 +73,11 @@ const Uptime = props => {
                             <circle cx={"20"} cy={"21"} r={"15.91549430918954"} fill={"transparent"}></circle>
                             <circle cx={"20"} cy={"21"} r={"15.91549430918954"} fill={"transparent"} stroke={"rgba(28, 28, 28, 0.6)"} strokeWidth={"5"}></circle>
                             <circle cx={"20"} cy={"21"} r={"15.91549430918954"} fill={"transparent"} stroke={"rgb(106, 27, 154)"} strokeWidth={"5"}
-                                strokeDasharray={getHourStrokeDashArray(props.percentage)} strokeDashoffset={"25"}></circle>
+                                strokeDasharray={"85 15"} strokeDashoffset={"25"}></circle>
 
                             <g style={styles.donutText}>
                                 <text style={styles.donutTotal} x="50%" y="50%">
-                                    {props.latestUptime.days}
+                                    {0}
                                 </text>
                                 <text style={styles.donutLabel} x="50%" y="50%">
                                     DAYS
@@ -92,7 +87,7 @@ const Uptime = props => {
                     </div>
                     <div style={styles.donutInfoContainer}>
                         <div style={styles.donutInfo}>
-                            {props.latestUptime.dateString}
+                            {"Test"}
                         </div>
                     </div>
                 </div>
@@ -101,4 +96,4 @@ const Uptime = props => {
     );
 };
 
-export default Uptime;
+export default UptimeWidget;
