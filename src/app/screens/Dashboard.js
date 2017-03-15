@@ -2,16 +2,15 @@ import React, { Component } from "react";
 import io from "socket.io-client";
 import { connect, } from "react-redux";
 import { socketMonitorServer } from "../../configs/EnvironmentVariables";
-import { getLatestUptime, getComponentsCount, getEntitiesCount } from "../redux/actions";
+import { getComponentsCount, getEntitiesCount } from "../redux/actions";
 
-// import { dashboard as styles } from "../css";
-
-import TransactionGraph from "../components/screens/dashboard/TransactionGraph";
-
-import UptimeWidget from "../components/screens/dashboard/UptimeWidget";
-import TransactionGraphWidget from "../components/screens/dashboard/TransactionGraphWidget";
-import CounterWidget from "../components/screens/dashboard/CounterWidget";
-import LoggerWidget from "../components/screens/dashboard/LoggerWidget";
+import MultiGraphWidget from "../components/widgets/MultiGraphWidget";
+import UptimeWidget from "../components/widgets/UptimeWidget";
+import EntitiesTransactionGraphWidget from "../components/widgets/EntitiesTransactionGraphWidget";
+import ComponentsTransactionGraphWidget from "../components/widgets/ComponentsTransactionGraphWidget";
+import EntitiesCounterWidget from "../components/widgets/EntitiesCounterWidget";
+import ComponentsCounterWidget from "../components/widgets/ComponentsCounterWidget";
+import LoggerWidget from "../components/widgets/LoggerWidget";
 
 //TODO: Set min-width and min-height (1200 x 800)
 
@@ -26,6 +25,12 @@ export const styles = {
         height: "100%",
         padding: "24px"
     },
+    multiGraphWidget: {
+        position: "absolute",
+        left: 0,
+        height: "40%",
+        width: "65%"
+    },
     uptimeWidget: {
         position: "absolute",
         right: 0,
@@ -33,7 +38,7 @@ export const styles = {
         width: "35%",
         height: "40%"
     },
-    entitiesTransactionWidget: {
+    entitiesTransactionGraphWidget: {
         position: "absolute",
         top: "40%",
         paddingTop: "24px",
@@ -41,7 +46,7 @@ export const styles = {
         width: "calc(32.5% - 12px)",
         height: "30%"
     },
-    componentsTransactionWidget: {
+    componentsTransactionGraphWidget: {
         position: "absolute",
         top: "40%",
         paddingTop: "24px",
@@ -75,18 +80,6 @@ export const styles = {
         paddingLeft: "24px",
         width: "35%",
         height: "60%"
-    },
-
-
-
-
-
-    transactionGraph: {
-        position: "absolute",
-        left: 0,
-        backgroundColor: "rgb(35, 35, 36)",
-        height: "40%",
-        width: "65%"
     }
 };
 
@@ -95,77 +88,148 @@ class Dashboard extends Component {
         super(props);
 
         this.state = {
-            uptime: null,
-            entitiesTransactionGraph: {},
-            componentsTransactionGraph: {},
-
-
-
-            graphData: {
-                weekly: {
-                    header: {
-                        type: "Transactions",
-                        total: 590
-                    },
-                    columns: [
-                        { label: "2/26", total: 20 }, { label: "2/27", total: 50 }, { label: "2/28", total: 80 },
-                        { label: "3/1", total: 140 }, { label: "3/2", total: 110 }, { label: "3/3", total: 65 }, { label: "3/4", total: 125 }
-                    ],
-                    scale: [50, 100, 150]
-                }
+            entitiesCount: 0,
+            componentsCount: 0,
+            entitiesTransactionCounts: {
+                added: 0,
+                removed: 0,
+                updated: 0,
+                retrieved: 0
+            },
+            componentsTransactionCounts: {
+                added: 0,
+                removed: 0,
+                updated: 0,
+                retrieved: 0
             }
         }
 
         this.socket = io(socketMonitorServer);
+        this._entityAddedEvent = this._entityAddedEvent.bind(this);
+        this._entityUpdatedEvent = this._entityUpdatedEvent.bind(this);
+        this._entityRemovedEvent = this._entityRemovedEvent.bind(this);
+        this._entityRetrievedEvent = this._entityRetrievedEvent.bind(this);
+        this._componentAddedEvent = this._componentAddedEvent.bind(this);
+        this._componentUpdatedEvent = this._componentUpdatedEvent.bind(this);
+        this._componentRemovedEvent = this._componentRemovedEvent.bind(this);
+        this._componentRetrievedEvent = this._componentRetrievedEvent.bind(this);
     }
 
-
-    componentWillMount() {
-        this.props.getLatestUptime();
-
-        this.socket.on("allTransactions", data => {
-            console.log(data);
+    _entityAddedEvent(transaction) {
+        this.setState((prevState) => {
+            return {
+                entitiesCount: prevState.entitiesCount + 1,
+                entitiesTransactionCounts: Object.assign({}, prevState.entitiesTransactionCounts, { added: prevState.entitiesTransactionCounts.added + 1 })
+            }
         });
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (this.state.uptime !== nextProps.uptime) {
-            this.setState({
-                uptime: nextProps.uptime
-            });
-        }
+    _entityUpdatedEvent(transaction) {
+        this.setState((prevState) => {
+            return {
+                entitiesTransactionCounts: Object.assign({}, prevState.entitiesTransactionCounts, { updated: prevState.entitiesTransactionCounts.updated + 1 })
+            }
+        });
+    }
+
+    _entityRemovedEvent(transaction) {
+        this.setState((prevState) => {
+            return {
+                entitiesCount: prevState.entitiesCount - 1,
+                entitiesTransactionCounts: Object.assign({}, prevState.entitiesTransactionCounts, { removed: prevState.entitiesTransactionCounts.removed + 1 })
+            }
+        });
+    }
+
+    _entityRetrievedEvent(transaction) {
+        this.setState((prevState) => {
+            return {
+                entitiesTransactionCounts: Object.assign({}, prevState.entitiesTransactionCounts, { retrieved: prevState.entitiesTransactionCounts.retrieved + 1 })
+            }
+        });
+    }
+
+    _componentAddedEvent(transaction) {
+        this.setState((prevState) => {
+            return {
+                componentsCount: prevState.componentsCount + 1,
+                componentsTransactionCounts: Object.assign({}, prevState.componentsTransactionCounts, { added: prevState.componentsTransactionCounts.added + 1 })
+            }
+        });
+    }
+
+    _componentUpdatedEvent(transaction) {
+        this.setState((prevState) => {
+            return {
+                componentsTransactionCounts: Object.assign({}, prevState.componentsTransactionCounts, { updated: prevState.componentsTransactionCounts.updated + 1 })
+            }
+        });
+    }
+
+    _componentRemovedEvent(transaction) {
+        this.setState((prevState) => {
+            return {
+                componentsCount: prevState.componentsCount - 1,
+                componentsTransactionCounts: Object.assign({}, prevState.componentsTransactionCounts, { removed: prevState.componentsTransactionCounts.removed + 1 })
+            }
+        });
+    }
+
+    _componentRetrievedEvent(transaction) {
+        this.setState((prevState) => {
+            return {
+                componentsTransactionCounts: Object.assign({}, prevState.componentsTransactionCounts, { retrieved: prevState.componentsTransactionCounts.retrieved + 1 })
+            }
+        });
+    }
+
+    componentWillMount() {
+        this.socket.on("allTransactions", data => {
+            const events = {
+                "entityAdded": this._entityAddedEvent,
+                "entityUpdated": this._entityUpdatedEvent,
+                "entityRemoved": this._entityRemovedEvent,
+                "entityRetrieved": this._entityRetrievedEvent,
+                "entityComponentAdded": this._componentAddedEvent,
+                "entityComponentUpdated": this._componentUpdatedEvent,
+                "entityComponentRemoved": this._componentRemovedEvent,
+                "entityComponentRetrieved": this._componentRetrievedEvent
+            };
+
+            if (events[data.transaction.type]) {
+                events[data.transaction.type](data.transaction);
+            }
+
+            console.log(data.transaction);
+        });
     }
 
     render() {
         return (
             <div style={this.props.style}>
                 <div style={styles.container}>
-
-
-                    <TransactionGraph style={styles.transactionGraph} data={this.state.graphData} />
-
-
-
-
+                    <div style={styles.multiGraphWidget}>
+                        <MultiGraphWidget style={styles.widget} />
+                    </div>
 
                     <div style={styles.uptimeWidget}>
-                        <UptimeWidget style={styles.widget} uptime={this.state.uptime} />
-                    </div>
-
-                    <div style={styles.entitiesTransactionWidget}>
-                        <TransactionGraphWidget style={styles.widget} />
-                    </div>
-
-                    <div style={styles.componentsTransactionWidget}>
-                        <TransactionGraphWidget style={styles.widget} />
+                        <UptimeWidget style={styles.widget} />
                     </div>
 
                     <div style={styles.entitiesCounterWidget}>
-                        <CounterWidget style={styles.widget} />
+                        <EntitiesCounterWidget style={styles.widget} entitiesCount={this.state.entitiesCount} />
                     </div>
 
                     <div style={styles.componentsCounterWidget}>
-                        <CounterWidget style={styles.widget} />
+                        <ComponentsCounterWidget style={styles.widget} componentsCount={this.state.componentsCount} />
+                    </div>
+
+                    <div style={styles.entitiesTransactionGraphWidget}>
+                        <EntitiesTransactionGraphWidget style={styles.widget} entitiesTransactionCounts={this.state.entitiesTransactionCounts} />
+                    </div>
+
+                    <div style={styles.componentsTransactionGraphWidget}>
+                        <ComponentsTransactionGraphWidget style={styles.widget} componentsTransactionCounts={this.state.componentsTransactionCounts} />
                     </div>
 
                     <div style={styles.loggerWidget}>
@@ -179,14 +243,12 @@ class Dashboard extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        uptime: state.uptime,
         componentsCount: state.componentsCount,
         entitiesCount: state.entitiesCount
     };
 };
 
 const mapDispatchToProps = {
-    getLatestUptime,
     getComponentsCount,
     getEntitiesCount
 };

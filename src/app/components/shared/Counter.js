@@ -11,7 +11,7 @@ const styles = {
         fontSize: "1.7vh",
         textAlign: "center"
     },
-    total: {
+    count: {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -25,19 +25,17 @@ const styles = {
     }
 };
 
-const TotalCard = props => {
+const Counter = props => {
     return (
-        <div style={props.style}>
-            <div style={styles.container}>
-                <div style={styles.header}>
-                    {props.config.type}
-                </div>
-                <div style={styles.total}>
-                    {props.config.total}
-                </div>
+        <div style={styles.container}>
+            <div style={styles.header}>
+                {props.type}
+            </div>
+            <div style={styles.count}>
+                {props.count}
             </div>
         </div>
     );
 };
 
-export default TotalCard;
+export default Counter;

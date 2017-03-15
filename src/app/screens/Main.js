@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import SidebarNavigator from "../components/screens/main/SidebarNavigator";
+import SidebarNavigator from "../components/layouts/SidebarNavigator";
 import Dashboard from "./Dashboard";
 
 const styles = {

@@ -2,9 +2,15 @@ import { combineReducers } from "redux";
 import uptime from "./uptime/Uptime";
 import componentsCount from "./components/ComponentsCount";
 import entitiesCount from "./entities/EntitiesCount";
+import entitiesTransactionCounts from "./transactions/EntitiesTransactionCounts";
+import componentsTransactionCounts from "./transactions/ComponentsTransactionCounts";
+import weeklyTransactionCounts from "./transactions/WeeklyTransactionCounts";
 
 export default combineReducers({
     uptime,
     componentsCount,
-    entitiesCount
+    entitiesCount,
+    entitiesTransactionCounts,
+    componentsTransactionCounts,
+    weeklyTransactionCounts
 });

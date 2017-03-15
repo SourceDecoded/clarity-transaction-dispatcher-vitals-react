@@ -7,8 +7,8 @@ export default function getEntitiesCount(action$) {
         .mergeMap(() => fetch(`${dispatcherServer}/api/entities?count=true`)
             .then(result => {
                 return result.json();
-            }).then(data => {
-                return data.count
+            }).then(result => {
+                return result.data.count
             }))
         .map(count => receivedEntitiesCount(count));
 };

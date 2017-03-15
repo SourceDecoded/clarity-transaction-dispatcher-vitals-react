@@ -47,6 +47,12 @@ const styles = {
         width: "100%",
         bottom: 0,
         zIndex: 2
+    },
+    scaleRowLine: {
+        position: "absolute",
+        right: 0,
+        left: 0,
+        zIndex: 1
     }
 };
 
@@ -57,6 +63,11 @@ class VerticalBarGraph extends Component {
         this.columnWidth = 0;
         this.largestScaleValue = 0;
         this.rowHeight = 0;
+
+        this._createBarElements = this._createBarElements.bind(this);
+        this._createLabelElements = this._createLabelElements.bind(this);
+        this._createScaleLabelElements = this._createScaleLabelElements.bind(this);
+        this._createScaleRowLineElements = this._createScaleRowLineElements.bind(this);
     }
 
     _createBarElements(items) {
@@ -70,8 +81,8 @@ class VerticalBarGraph extends Component {
                     leftPosition += this.columnWidth * 2;
 
                     return (
-                        <div style={Object.assign({}, styles.column, { width: this.columnWidth + "%", backgroundColor: item.emptyBackgroundColor, left })} key={index}>
-                            <div style={Object.assign({}, styles.bar, { backgroundColor: item.backgroundColor, height })}></div>
+                        <div style={Object.assign({}, styles.column, { width: this.columnWidth + "%", backgroundColor: this.props.theme.emptyBarBackgroundColor, left })} key={index}>
+                            <div style={Object.assign({}, styles.bar, { backgroundColor: this.props.theme.barBackgroundColor, height })}></div>
                         </div>
                     )
                 })}
@@ -88,7 +99,7 @@ class VerticalBarGraph extends Component {
                     const left = leftPosition + "%";
                     leftPosition += this.columnWidth * 2;
 
-                    return <div style={Object.assign({}, styles.label, { width: this.columnWidth + "%", color: item.color, left })} key={index}>{item.label}</div>
+                    return <div style={Object.assign({}, styles.label, { width: this.columnWidth + "%", color: this.props.theme.labelColor, left })} key={index}>{item.label}</div>
                 })}
             </div>
         );
@@ -103,28 +114,46 @@ class VerticalBarGraph extends Component {
                 {scales.map((scale, index) => {
                     topPosition -= this.rowHeight;
 
-                    return <div style={Object.assign({}, styles.scaleValue, { color: scale.color, top: topPosition + "%" })} key={index}>{scale.value}</div>
+                    return <div style={Object.assign({}, styles.scaleValue, { color: this.props.theme.labelColor, top: topPosition + "%" })} key={index}>{scale}</div>
+                })}
+            </div>
+        );
+    }
+
+    _createScaleRowLineElements(scales) {
+        let topPosition = 100;
+
+        return (
+            <div>
+                <div style={Object.assign({}, styles.scaleRowLine, { borderTop: `3px solid ${this.props.theme.scaleLineColor}`, bottom: 0 })}></div>
+
+                {scales.map((scale, index) => {
+                    topPosition -= this.rowHeight;
+
+                    return <div style={Object.assign({}, styles.scaleRowLine, { borderTop: `3px solid ${this.props.theme.scaleLineColor}`, top: topPosition + "%" })} key={index}></div>
                 })}
             </div>
         );
     }
 
     render() {
-        const config = this.props.config;
-        this.rowHeight = 100 / config.scales.length;
-        this.largestScaleValue = config.scales.slice(-1)[0].value;
-        this.columnWidth = 100 / ((config.items.length * 2) - 1);
+        const scales = this.props.scales;
+        const items = this.props.items;
+        this.rowHeight = 100 / scales.length;
+        this.largestScaleValue = scales.length > 0 ? scales.slice(-1)[0] : 0;
+        this.columnWidth = 100 / ((items.length * 2) - 1);
 
         return (
             <div style={styles.container}>
                 <div style={styles.scaleContainer}>
-                    {this._createScaleLabelElements(this.props.config.scales)}
+                    {this._createScaleLabelElements(scales)}
                 </div>
                 <div style={styles.labelContainer}>
-                    {this._createLabelElements(this.props.config.items)}
+                    {this._createLabelElements(items)}
                 </div>
                 <div style={styles.barContainer}>
-                    {this._createBarElements(this.props.config.items)}
+                    {this._createBarElements(items)}
+                    {this._createScaleRowLineElements(scales)}
                 </div>
             </div>
         );

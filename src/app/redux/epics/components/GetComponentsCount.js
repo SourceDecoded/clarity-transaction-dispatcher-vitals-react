@@ -7,8 +7,8 @@ export default function getComponentsCount(action$) {
         .mergeMap(() => fetch(`${dispatcherServer}/api/components?count=true`)
             .then(result => {
                 return result.json();
-            }).then(data => {
-                return data.count
+            }).then(result => {
+                return result.data.count
             }))
         .map(count => receivedComponentsCount(count));
 };
