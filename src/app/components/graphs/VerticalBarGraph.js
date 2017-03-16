@@ -125,12 +125,12 @@ class VerticalBarGraph extends Component {
 
         return (
             <div>
-                <div style={Object.assign({}, styles.scaleRowLine, { borderTop: `3px solid ${this.props.theme.scaleLineColor}`, bottom: 0 })}></div>
+                <div style={Object.assign({}, styles.scaleRowLine, { borderTop: `2px solid ${this.props.theme.scaleLineColor}`, bottom: 0 })}></div>
 
                 {scales.map((scale, index) => {
                     topPosition -= this.rowHeight;
 
-                    return <div style={Object.assign({}, styles.scaleRowLine, { borderTop: `3px solid ${this.props.theme.scaleLineColor}`, top: topPosition + "%" })} key={index}></div>
+                    return <div style={Object.assign({}, styles.scaleRowLine, { borderTop: `2px solid ${this.props.theme.scaleLineColor}`, top: topPosition + "%" })} key={index}></div>
                 })}
             </div>
         );

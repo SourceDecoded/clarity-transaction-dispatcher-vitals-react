@@ -37,7 +37,7 @@ const styles = {
 const SidebarNavigator = props => {
     return (
         <div style={props.style}>
-            <div style={styles.header}></div>
+            {/*<div style={styles.header}></div>*/}
             <div style={styles.tab}>
                 <div style={styles.selectedTabHighlight}></div>
                 <div style={styles.tabIconContainer}>

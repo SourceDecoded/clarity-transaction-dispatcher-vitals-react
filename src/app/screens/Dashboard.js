@@ -38,7 +38,7 @@ export const styles = {
         width: "35%",
         height: "40%"
     },
-    entitiesTransactionGraphWidget: {
+    entitiesCounterWidget: {
         position: "absolute",
         top: "40%",
         paddingTop: "24px",
@@ -46,7 +46,7 @@ export const styles = {
         width: "calc(32.5% - 12px)",
         height: "30%"
     },
-    componentsTransactionGraphWidget: {
+    componentsCounterWidget: {
         position: "absolute",
         top: "40%",
         paddingTop: "24px",
@@ -55,7 +55,7 @@ export const styles = {
         width: "calc(32.5% + 12px)",
         height: "30%"
     },
-    entitiesCounterWidget: {
+    entitiesTransactionGraphWidget: {
         position: "absolute",
         top: "70%",
         paddingTop: "24px",
@@ -63,7 +63,7 @@ export const styles = {
         width: "calc(32.5% - 12px)",
         height: "30%"
     },
-    componentsCounterWidget: {
+    componentsTransactionGraphWidget: {
         position: "absolute",
         top: "70%",
         paddingTop: "24px",
@@ -90,6 +90,7 @@ class Dashboard extends Component {
         this.state = {
             entitiesCount: 0,
             componentsCount: 0,
+            todaysTransactionCount: 0,
             entitiesTransactionCounts: {
                 added: 0,
                 removed: 0,
@@ -109,6 +110,7 @@ class Dashboard extends Component {
         this._entityUpdatedEvent = this._entityUpdatedEvent.bind(this);
         this._entityRemovedEvent = this._entityRemovedEvent.bind(this);
         this._entityRetrievedEvent = this._entityRetrievedEvent.bind(this);
+        this._entityContentUpdatedEvent = this._entityContentUpdatedEvent.bind(this);
         this._componentAddedEvent = this._componentAddedEvent.bind(this);
         this._componentUpdatedEvent = this._componentUpdatedEvent.bind(this);
         this._componentRemovedEvent = this._componentRemovedEvent.bind(this);
@@ -119,6 +121,7 @@ class Dashboard extends Component {
         this.setState((prevState) => {
             return {
                 entitiesCount: prevState.entitiesCount + 1,
+                todaysTransactionCount: prevState.todaysTransactionCount + 1,
                 entitiesTransactionCounts: Object.assign({}, prevState.entitiesTransactionCounts, { added: prevState.entitiesTransactionCounts.added + 1 })
             }
         });
@@ -127,6 +130,7 @@ class Dashboard extends Component {
     _entityUpdatedEvent(transaction) {
         this.setState((prevState) => {
             return {
+                todaysTransactionCount: prevState.todaysTransactionCount + 1,
                 entitiesTransactionCounts: Object.assign({}, prevState.entitiesTransactionCounts, { updated: prevState.entitiesTransactionCounts.updated + 1 })
             }
         });
@@ -136,6 +140,7 @@ class Dashboard extends Component {
         this.setState((prevState) => {
             return {
                 entitiesCount: prevState.entitiesCount - 1,
+                todaysTransactionCount: prevState.todaysTransactionCount + 1,
                 entitiesTransactionCounts: Object.assign({}, prevState.entitiesTransactionCounts, { removed: prevState.entitiesTransactionCounts.removed + 1 })
             }
         });
@@ -144,7 +149,16 @@ class Dashboard extends Component {
     _entityRetrievedEvent(transaction) {
         this.setState((prevState) => {
             return {
+                todaysTransactionCount: prevState.todaysTransactionCount + 1,
                 entitiesTransactionCounts: Object.assign({}, prevState.entitiesTransactionCounts, { retrieved: prevState.entitiesTransactionCounts.retrieved + 1 })
+            }
+        });
+    }
+
+    _entityContentUpdatedEvent(transaction) {
+        this.setState((prevState) => {
+            return {
+                todaysTransactionCount: prevState.todaysTransactionCount + 1
             }
         });
     }
@@ -153,6 +167,7 @@ class Dashboard extends Component {
         this.setState((prevState) => {
             return {
                 componentsCount: prevState.componentsCount + 1,
+                todaysTransactionCount: prevState.todaysTransactionCount + 1,
                 componentsTransactionCounts: Object.assign({}, prevState.componentsTransactionCounts, { added: prevState.componentsTransactionCounts.added + 1 })
             }
         });
@@ -161,6 +176,7 @@ class Dashboard extends Component {
     _componentUpdatedEvent(transaction) {
         this.setState((prevState) => {
             return {
+                todaysTransactionCount: prevState.todaysTransactionCount + 1,
                 componentsTransactionCounts: Object.assign({}, prevState.componentsTransactionCounts, { updated: prevState.componentsTransactionCounts.updated + 1 })
             }
         });
@@ -170,6 +186,7 @@ class Dashboard extends Component {
         this.setState((prevState) => {
             return {
                 componentsCount: prevState.componentsCount - 1,
+                todaysTransactionCount: prevState.todaysTransactionCount + 1,
                 componentsTransactionCounts: Object.assign({}, prevState.componentsTransactionCounts, { removed: prevState.componentsTransactionCounts.removed + 1 })
             }
         });
@@ -178,6 +195,7 @@ class Dashboard extends Component {
     _componentRetrievedEvent(transaction) {
         this.setState((prevState) => {
             return {
+                todaysTransactionCount: prevState.todaysTransactionCount + 1,
                 componentsTransactionCounts: Object.assign({}, prevState.componentsTransactionCounts, { retrieved: prevState.componentsTransactionCounts.retrieved + 1 })
             }
         });
@@ -190,6 +208,7 @@ class Dashboard extends Component {
                 "entityUpdated": this._entityUpdatedEvent,
                 "entityRemoved": this._entityRemovedEvent,
                 "entityRetrieved": this._entityRetrievedEvent,
+                "entityContentUpdated": this._entityContentUpdatedEvent,
                 "entityComponentAdded": this._componentAddedEvent,
                 "entityComponentUpdated": this._componentUpdatedEvent,
                 "entityComponentRemoved": this._componentRemovedEvent,
@@ -209,7 +228,7 @@ class Dashboard extends Component {
             <div style={this.props.style}>
                 <div style={styles.container}>
                     <div style={styles.multiGraphWidget}>
-                        <MultiGraphWidget style={styles.widget} />
+                        <MultiGraphWidget style={styles.widget} todaysTransactionCount={this.state.todaysTransactionCount} />
                     </div>
 
                     <div style={styles.uptimeWidget}>

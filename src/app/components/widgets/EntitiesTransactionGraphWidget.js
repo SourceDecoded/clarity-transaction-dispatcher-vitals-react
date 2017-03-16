@@ -40,9 +40,9 @@ class EntitiesTransactionGraphWidget extends Component {
         this.items = [];
 
         this.theme = {
-            barBackgroundColor: "rgb(239, 108, 0)",
+            barBackgroundColor: "rgb(25, 118, 210)",
             emptyBarBackgroundColor: "rgba(42, 42, 43, 0.54902)",
-            labelColor: "rgba(239, 108, 0, 0.8)",
+            labelColor: "rgba(25, 118, 210, 0.8)",
             scaleLineColor: "rgba(25, 25, 25, .3)"
         };
 

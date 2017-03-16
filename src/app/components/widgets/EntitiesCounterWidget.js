@@ -27,7 +27,7 @@ class EntitiesCounterWidget extends Component {
     render() {
         return (
             <div style={this.props.style}>
-                <Counter type={"Entities"} count={this.state.count + this.props.entitiesCount} />
+                <Counter count={this.state.count + this.props.entitiesCount} />
             </div>
         );
     }

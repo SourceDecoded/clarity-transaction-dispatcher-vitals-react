@@ -27,7 +27,7 @@ class ComponentsCounterWidget extends Component {
     render() {
         return (
             <div style={this.props.style}>
-                <Counter type={"Components"} count={this.state.count + this.props.componentsCount} />
+                <Counter count={this.state.count + this.props.componentsCount} />
             </div>
         );
     }
