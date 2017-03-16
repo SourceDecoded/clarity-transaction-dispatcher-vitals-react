@@ -25,12 +25,8 @@ class MultiGraphWidget extends Component {
         super(props);
     }
 
-    _setWeeklyDates() {
-        const currentDate = new Date();
-    }
-
     componentWillMount() {
-        this._setWeeklyDates()
+        this.props.getWeeklyTransactionCounts()
     }
 
     render() {

@@ -12,37 +12,19 @@ export default function getWeeklyTransactionCounts(action$) {
 
     const filter = {
         createdDate: {
-            $gte: startDate,
-            $lte: endDate
+            $gte: { "$date": startDate },
+            $lte: { "$date": endDate }
         }
     };
 
     const filterString = JSON.stringify(filter);
 
     return action$.ofType(ActionTypes.GET_ENTITIES_COUNT)
-        .mergeMap(() => fetch(`${monitorServer}/api/transactions?filter=${filterString}`)
+        .mergeMap(() => fetch(`${monitorServer}/api/transactions?filter=${filterString}&count=true`)
             .then(result => {
                 return result.json();
             }).then(result => {
-                added = result.data.count;
-            }))
-        .mergeMap(() => fetch(`${monitorServer}/api/transactions?filter={"type": "entityComponentUpdated"}&count=true`)
-            .then(result => {
-                return result.json();
-            }).then(result => {
-                updated = result.data.count;
-            }))
-        .mergeMap(() => fetch(`${monitorServer}/api/transactions?filter={"type": "entityComponentRemoved"}&count=true`)
-            .then(result => {
-                return result.json();
-            }).then(result => {
-                removed = result.data.count;
-            }))
-        .mergeMap(() => fetch(`${monitorServer}/api/transactions?filter={"type": "entityComponentRetrieved"}&count=true`)
-            .then(result => {
-                return result.json();
-            }).then(result => {
-                retrieved = result.data.count;
+                counts.push(result.data.count);
             }))
         .map(() => receivedWeeklyTransactionCounts(counts));
 };
