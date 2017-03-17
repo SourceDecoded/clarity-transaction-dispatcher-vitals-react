@@ -3,8 +3,8 @@ import React from "react";
 const styles = {
     container: {
         position: "absolute",
-        height: "60%",
-        width: "60%",
+        height: "100%",
+        width: "100%",
         top: 0,
         bottom: 0,
         left: 0,

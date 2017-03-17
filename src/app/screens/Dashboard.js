@@ -38,7 +38,7 @@ export const styles = {
         width: "35%",
         height: "40%"
     },
-    entitiesCounterWidget: {
+    entitiesTransactionGraphWidget: {
         position: "absolute",
         top: "40%",
         paddingTop: "24px",
@@ -46,7 +46,7 @@ export const styles = {
         width: "calc(32.5% - 12px)",
         height: "30%"
     },
-    componentsCounterWidget: {
+    componentsTransactionGraphWidget: {
         position: "absolute",
         top: "40%",
         paddingTop: "24px",
@@ -55,7 +55,7 @@ export const styles = {
         width: "calc(32.5% + 12px)",
         height: "30%"
     },
-    entitiesTransactionGraphWidget: {
+    entitiesCounterWidget: {
         position: "absolute",
         top: "70%",
         paddingTop: "24px",
@@ -63,7 +63,7 @@ export const styles = {
         width: "calc(32.5% - 12px)",
         height: "30%"
     },
-    componentsTransactionGraphWidget: {
+    componentsCounterWidget: {
         position: "absolute",
         top: "70%",
         paddingTop: "24px",
@@ -235,14 +235,6 @@ class Dashboard extends Component {
                         <UptimeWidget style={styles.widget} />
                     </div>
 
-                    <div style={styles.entitiesCounterWidget}>
-                        <EntitiesCounterWidget style={styles.widget} entitiesCount={this.state.entitiesCount} />
-                    </div>
-
-                    <div style={styles.componentsCounterWidget}>
-                        <ComponentsCounterWidget style={styles.widget} componentsCount={this.state.componentsCount} />
-                    </div>
-
                     <div style={styles.entitiesTransactionGraphWidget}>
                         <EntitiesTransactionGraphWidget style={styles.widget} entitiesTransactionCounts={this.state.entitiesTransactionCounts} />
                     </div>
@@ -251,8 +243,16 @@ class Dashboard extends Component {
                         <ComponentsTransactionGraphWidget style={styles.widget} componentsTransactionCounts={this.state.componentsTransactionCounts} />
                     </div>
 
+                    <div style={styles.entitiesCounterWidget}>
+                        <EntitiesCounterWidget style={styles.widget} entitiesCount={this.state.entitiesCount} />
+                    </div>
+
+                    <div style={styles.componentsCounterWidget}>
+                        <ComponentsCounterWidget style={styles.widget} componentsCount={this.state.componentsCount} />
+                    </div>
+
                     <div style={styles.loggerWidget}>
-                        <LoggerWidget style={styles.widget} />
+                        <LoggerWidget style={{ backgroundColor: "rgb(35, 35, 36)", height: "100%" }} />
                     </div>
                 </div>
             </div>
