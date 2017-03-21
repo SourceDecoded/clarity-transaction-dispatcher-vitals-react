@@ -8,6 +8,7 @@ export default function getComponentsTransactionCounts(action$) {
     let removed = 0;
     let retrieved = 0;
 
+    //TODO: Refactor this ugly code with a loop.
     return action$.ofType(ActionTypes.GET_ENTITIES_COUNT)
         .mergeMap(() => fetch(`${monitorServer}/api/transactions?filter={"type": "entityComponentAdded"}&count=true`)
             .then(result => {

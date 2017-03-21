@@ -10,6 +10,8 @@ import getComponentsTransactionCounts from "./transactions/GetComponentsTransact
 import receivedComponentsTransactionCounts from "./transactions/ReceivedComponentsTransactionCounts";
 import getWeeklyTransactionCounts from "./transactions/GetWeeklyTransactionCounts";
 import receivedWeeklyTransactionCounts from "./transactions/ReceivedWeeklyTransactionCounts";
+import getLogs from "./logs/GetLogs";
+import receivedLogs from "./logs/ReceivedLogs";
 
 export {
     getLatestUptime,
@@ -23,5 +25,7 @@ export {
     getComponentsTransactionCounts,
     receivedComponentsTransactionCounts,
     getWeeklyTransactionCounts,
-    receivedWeeklyTransactionCounts
+    receivedWeeklyTransactionCounts,
+    getLogs,
+    receivedLogs
 };

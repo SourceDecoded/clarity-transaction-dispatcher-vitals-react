@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { ListView, ListViewDataSource } from "clarity-react-infinite-list";
 import { connect, } from "react-redux";
-// import { getLogs } from "../../redux/actions";
+import { getLogs } from "../../redux/actions";
+import LogListItem from "../layouts/LogListItem";
 
 const styles = {
     container: {
@@ -35,11 +36,13 @@ class LoggerWidget extends Component {
     }
 
     _renderRow(rowData, rowId) {
-
+        return (
+            <LogListItem key={rowId} rowData={rowData} />
+        );
     }
 
     _onEndReached() {
-
+        
     }
 
     _loadingComponent() {
@@ -47,7 +50,23 @@ class LoggerWidget extends Component {
     }
 
     componentWillMount() {
-        // this.props.getLogs(this.state.lastLogId);
+        this.props.getLogs(this.state.lastLogId, 50);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.logs[nextProps.logs.length - 1] && this.state.lastLogId !== nextProps.logs[nextProps.logs.length - 1]._id) {
+            this.setState({
+                dataSource: this.state.dataSource.appendRows(nextProps.logs),
+                lastLogId: nextProps.logs[nextProps.logs.length - 1]._id,
+            });
+        }
+
+        if (this.props.streamedLog !== nextProps.streamedLog) {
+            this.setState({
+                dataSource: this.state.dataSource.prependRows(nextProps.streamedLog)
+            });
+            console.log(nextProps.streamedLog);
+        }
     }
 
     render() {
@@ -69,12 +88,12 @@ class LoggerWidget extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        // logs: state.logs
+        logs: state.logs
     };
 };
 
 const mapDispatchToProps = {
-    // getLogs
+    getLogs
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoggerWidget);

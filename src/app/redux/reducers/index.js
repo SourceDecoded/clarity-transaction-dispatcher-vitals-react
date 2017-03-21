@@ -5,6 +5,7 @@ import entitiesCount from "./entities/EntitiesCount";
 import entitiesTransactionCounts from "./transactions/EntitiesTransactionCounts";
 import componentsTransactionCounts from "./transactions/ComponentsTransactionCounts";
 import weeklyTransactionCounts from "./transactions/WeeklyTransactionCounts";
+import logs from "./logs/Logs";
 
 export default combineReducers({
     uptime,
@@ -12,5 +13,6 @@ export default combineReducers({
     entitiesCount,
     entitiesTransactionCounts,
     componentsTransactionCounts,
-    weeklyTransactionCounts
+    weeklyTransactionCounts,
+    logs
 });

@@ -5,6 +5,7 @@ import getEntitiesCount from "./entities/GetEntitiesCount";
 import getEntitiesTransactionCounts from "./transactions/GetEntitiesTransactionCounts";
 import getComponentsTransactionCounts from "./transactions/GetComponentsTransactionCounts";
 import getWeeklyTransactionCounts from "./transactions/GetWeeklyTransactionCounts";
+import getLogs from "./logs/GetLogs";
 
 export default combineEpics(
     getLatestUptime,
@@ -12,5 +13,6 @@ export default combineEpics(
     getEntitiesCount,
     getEntitiesTransactionCounts,
     getComponentsTransactionCounts,
-    getWeeklyTransactionCounts
+    getWeeklyTransactionCounts,
+    getLogs
 );

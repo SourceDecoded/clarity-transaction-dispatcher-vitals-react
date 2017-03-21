@@ -102,7 +102,8 @@ class Dashboard extends Component {
                 removed: 0,
                 updated: 0,
                 retrieved: 0
-            }
+            },
+            streamedLog: {}
         }
 
         this.socket = io(socketMonitorServer);
@@ -201,6 +202,12 @@ class Dashboard extends Component {
         });
     }
 
+    _streamedLogEvent(log) {
+        this.setState({
+            streamedLog: log
+        });
+    }
+
     componentWillMount() {
         this.socket.on("allTransactions", data => {
             const events = {
@@ -218,8 +225,10 @@ class Dashboard extends Component {
             if (events[data.transaction.type]) {
                 events[data.transaction.type](data.transaction);
             }
+        });
 
-            console.log(data.transaction);
+        this.socket.on("allLogs", data => {
+            this._streamedLogEvent(data.log);
         });
     }
 
@@ -252,7 +261,7 @@ class Dashboard extends Component {
                     </div>
 
                     <div style={styles.loggerWidget}>
-                        <LoggerWidget style={{ backgroundColor: "rgb(35, 35, 36)", height: "100%" }} />
+                        <LoggerWidget style={{ backgroundColor: "rgb(35, 35, 36)", height: "100%" }} streamedLog={this.state.streamedLog} />
                     </div>
                 </div>
             </div>

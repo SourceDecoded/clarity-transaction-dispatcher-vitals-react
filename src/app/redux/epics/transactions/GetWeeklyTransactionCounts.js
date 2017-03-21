@@ -24,7 +24,7 @@ export default function getWeeklyTransactionCounts(action$) {
         return JSON.stringify(filter);
     };
 
-//TODO: Refactor this ugly code with a loop.
+    //TODO: Refactor this ugly code with a loop.
     return action$.ofType(ActionTypes.GET_ENTITIES_COUNT)
         .mergeMap(() => {
             const filterString = getFilterString(6);
