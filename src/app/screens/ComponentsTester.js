@@ -25,7 +25,7 @@ class Main extends Component {
                 <EntityManager style={styles.component} />
                 <Switch style={styles.component} />
                 <SingleSelect values={values} style={styles.component} />
-                <Switch style={styles.component} />
+                <input style={Object.assign({}, styles.component, theme.input)} />
             </div>
         );
     }

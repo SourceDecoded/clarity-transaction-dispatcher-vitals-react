@@ -10,7 +10,8 @@ const styles = {
     placeholder: Object.assign({
         width: "100%",
         height: "100%",
-        outline: "none"
+        outline: "none",
+        textTransform: "uppercase"
     }),
     options: Object.assign({
         zIndex: "1",
@@ -21,6 +22,7 @@ const styles = {
         maxHeight: "100px",
         height: "auto",
         overflow: "auto",
+        textTransform: "uppercase"
     }, theme.tertiaryLayer),
     option: {
         padding: theme.input.padding,
@@ -48,9 +50,10 @@ export default class SingleSelect extends Component {
         this.state = {
             isFocused: false,
             selectedIndex: null,
-            hoveredOption: null
+            hoveredOption: null,
         };
 
+        this.shouldScrollToSelected = false;
         this.value = this.props.value;
         this.optionsElement;
         this.changeCallback = typeof this.props.onChange === "function" ? this.props.onChange : () => { };
@@ -61,18 +64,6 @@ export default class SingleSelect extends Component {
         this.openOptions = this.openOptions.bind(this);
         this.closeOptions = this.closeOptions.bind(this);
         this.onKeyDown = this.onKeyDown.bind(this);
-    }
-
-    mouseEnterOption(event) {
-        this.setState({
-            hoveredOption: event.target.getAttribute("data-index")
-        });
-    }
-
-    mouseLeaveOption(event) {
-        this.setState({
-            hoveredOption: null
-        });
     }
 
     clickOption(event) {
@@ -86,43 +77,15 @@ export default class SingleSelect extends Component {
         });
     }
 
-    toggleOptions() {
-        if (this.state.isFocused) {
-            this.closeOptions();
-        } else {
-            this.openOptions();
-        }
-    }
-
-    openOptions() {
-        this.setState({
-            isFocused: true
-        });
-    }
-
     closeOptions() {
         this.setState({
             isFocused: false
         });
     }
 
-    renderValues(values) {
-        return values.map((value, index) => {
-            var highlight = (this.state.hoveredOption == null && this.state.selectedIndex === index) ||
-                this.state.hoveredOption === index.toString();
-
-            var style = Object.assign({}, styles.option, {
-                backgroundColor: highlight ? theme.secondaryColor.backgroundColor : ""
-            });
-
-            return (
-                <div data-index={index} onMouseDown={this.clickOption} onMouseEnter={this.mouseEnterOption} onMouseLeave={this.mouseLeaveOption} style={style}>{value}</div>
-            );
-        });
-    }
-
     onKeyDown(event) {
         var index = this.state.selectedIndex;
+        var shouldScrollToSelected = false;
 
         if (event.which == 38) {
             if (index == null) {
@@ -144,10 +107,31 @@ export default class SingleSelect extends Component {
 
         if (this.state.selectedIndex !== index) {
             this.changeCallback(this.value);
+            this.shouldScrollToSelected = true;
         }
 
-        this.setState({ selectedIndex: index });
+        this.setState({
+            selectedIndex: index
+        });
 
+    }
+
+    openOptions() {
+        this.setState({
+            isFocused: true
+        });
+    }
+
+    mouseEnterOption(event) {
+        this.setState({
+            hoveredOption: event.target.getAttribute("data-index")
+        });
+    }
+
+    mouseLeaveOption(event) {
+        this.setState({
+            hoveredOption: null
+        });
     }
 
     render() {
@@ -157,8 +141,9 @@ export default class SingleSelect extends Component {
             display: this.state.isFocused ? "block" : "none"
         };
 
-        if (this.optionsElement != null) {
+        if (this.optionsElement != null && this.shouldScrollToSelected) {
             this.optionsElement.scrollTop = parseInt(styles.option.height, 10) * this.state.selectedIndex;
+            this.shouldScrollToSelected = false;
         }
 
         return (
@@ -167,7 +152,7 @@ export default class SingleSelect extends Component {
                     <div style={Object.assign({
                         width: "100%",
                         padding: theme.input.padding
-                    }, theme.center)}>{value || "--select--"}</div>
+                    }, theme.center)}>{value || "--SELECT--"}</div>
                     <div style={styles.arrow}></div>
                 </div>
                 <div ref={(div) => { this.optionsElement = div; }} style={Object.assign({}, styles.options, optionsStyles)}>
@@ -176,6 +161,30 @@ export default class SingleSelect extends Component {
             </div>
         );
     }
+
+    renderValues(values) {
+        return values.map((value, index) => {
+            var highlight = (this.state.hoveredOption == null && this.state.selectedIndex === index) ||
+                this.state.hoveredOption === index.toString();
+
+            var style = Object.assign({}, styles.option, {
+                backgroundColor: highlight ? theme.secondaryColor.backgroundColor : ""
+            });
+
+            return (
+                <div data-index={index} onMouseDown={this.clickOption} onMouseEnter={this.mouseEnterOption} onMouseLeave={this.mouseLeaveOption} style={style}>{value}</div>
+            );
+        });
+    }
+
+    toggleOptions() {
+        if (this.state.isFocused) {
+            this.closeOptions();
+        } else {
+            this.openOptions();
+        }
+    }
+
 }
 
 SingleSelect.defaultProps = {

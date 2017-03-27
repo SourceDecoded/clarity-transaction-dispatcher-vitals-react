@@ -100,10 +100,10 @@ export default class PropertyManager extends Component {
         return (
             <div style={Object.assign({}, styles.container, this.props.style)} onClick={this.toggle}>
                 <div style={styles.on} >
-                    <div style={styles.centerText}>on</div>
+                    <div style={styles.centerText}>ON</div>
                 </div>
                 <div style={styles.off}>
-                    <div style={styles.centerText}>Off</div>
+                    <div style={styles.centerText}>OFF</div>
                 </div>
                 <div style={Object.assign({}, styles.handle, this.handlePosition)}></div>
             </div>

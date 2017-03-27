@@ -61,9 +61,10 @@ export default {
         backgroundColor: "rgb(73,73,74)",
         color: "rgba(255,255,255,0.75)",
         fontSize: "12px",
-        textTransform: "uppercase",
         padding: "0px 5px",
-        boxSizing: "border-box"
+        boxSizing: "border-box",
+        border: 0,
+        outline: "none"
     },
     center: {
         position:"absolute",

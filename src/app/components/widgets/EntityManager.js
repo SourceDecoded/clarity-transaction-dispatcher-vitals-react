@@ -1,33 +1,48 @@
 import React, { Component } from "react";
-import styles from "./../styles/theme";
+import theme from "./../styles/theme";
 
-const containerStyles = Object.assign(
-    {},
-    styles.container,
-    styles.defaultFont,
-    {
+const styles = {
+    container: Object.assign(
+        {},
+        theme.container,
+        theme.defaultFont,
+        {
+            width: "100%",
+            height: "600px",
+            padding: "15px"
+        }
+    ),
+    containerPadding: {
+        position: "relative",
         width: "100%",
-        height: "600px",
-        padding: "15px"
+        height: "100%"
+    },
+    header: {
+        position: "absolute",
+        top: "0",
+        left: "0",
+        height: "100px",
+        right: "300px"
+    },
+    content: {
+        position: "absolute",
+        top: "100px",
+        left: "0",
+        bottom: "0",
+        right: "300px",
+        borderRadius: "3px",
+        backgroundColor: theme.primaryLayer.backgroundColor
+    },
+    components: {
+        position: "absolute",
+        top: "0",
+        right: "0",
+        width: "285px",
+        bottom: "0",
+        backgroundColor: theme.primaryLayer.backgroundColor,
+        overflowY: "scroll"
     }
-);
-
-const containerPaddingStyles = {
-    width: "100%",
-    height: "100%"
 };
-
-const headerStyles = Object.assign({
-
-}, styles.defaultFont);
-
-const contentStyles = Object.assign({
-
-}, styles.defaultFont);
-
-const componentsContainerStyles = Object.assign({
-
-}, styles.defaultFont);
 
 export default class EntityManager extends Component {
     constructor(props) {
@@ -36,11 +51,13 @@ export default class EntityManager extends Component {
 
     render() {
         return (
-            <div style={containerStyles}>
-                <div style={containerPaddingStyles}>
-                    <div style={headerStyles}></div>
-                    <div style={contentStyles}></div>
-                    <div style={componentsContainerStyles}></div>
+            <div style={styles.container}>
+                <div style={styles.containerPadding}>
+                    <div style={styles.header}></div>
+                    <div style={styles.content}></div>
+                    <div style={styles.components}>
+                        <div style={{height: "1000px"}}></div>
+                    </div>
                 </div>
             </div>
         );
