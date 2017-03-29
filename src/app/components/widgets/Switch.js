@@ -11,8 +11,11 @@ const styles = {
     container: Object.assign({
         position: "relative",
         cursor: "pointer",
+        display: "inline-block",
         userSelect: "none",
-        msUserSelect: "none"
+        msUserSelect: "none",
+        minWidth: "75px",
+        maxWidth: "100px"
     }, theme.secondaryLayer, theme.input, {
             width: "75px"
         }),
@@ -30,7 +33,8 @@ const styles = {
         left: "0",
         textTransform: "uppercase",
         borderRadius: "3px 0 0 3px",
-        color: "rgba(255,255,255,0.85)"
+        color: "rgba(255,255,255,0.85)",
+        overflow: "hidden"
     }, half, theme.secondaryColor),
     off: Object.assign({
         position: "absolute",
@@ -38,7 +42,8 @@ const styles = {
         left: "50%",
         textTransform: "uppercase",
         borderRadius: "0 3px 3px 0",
-        color: "rgba(255,255,255,0.75)"
+        color: "rgba(255,255,255,0.75)",
+        overflow: "hidden"
     }, half, theme.tertiaryLayer),
     centerText: {
         transform: "translate(-50%, -50%)",

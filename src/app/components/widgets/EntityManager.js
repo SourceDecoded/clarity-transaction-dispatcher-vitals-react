@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import ComponentsManager from "./ComponentsManager";
 import theme from "./../styles/theme";
 
 const styles = {
@@ -21,7 +22,7 @@ const styles = {
         position: "absolute",
         top: "0",
         left: "0",
-        height: "100px",
+        height: "85px",
         right: "300px"
     },
     content: {
@@ -39,8 +40,21 @@ const styles = {
         right: "0",
         width: "285px",
         bottom: "0",
-        backgroundColor: theme.primaryLayer.backgroundColor,
-        overflowY: "scroll"
+        backgroundColor: theme.primaryLayer.backgroundColor
+    },
+    id: {
+        fontSize: "34px"
+    },
+    metaData: {
+        fontSize: "14px"
+    },
+    metaDataValue: {
+        fontSize: "10px"
+    },
+    deleteEntity: {
+        position: "absolute",
+        bottom: 0,
+        right: 0
     }
 };
 
@@ -53,11 +67,24 @@ export default class EntityManager extends Component {
         return (
             <div style={styles.container}>
                 <div style={styles.containerPadding}>
-                    <div style={styles.header}></div>
-                    <div style={styles.content}></div>
-                    <div style={styles.components}>
-                        <div style={{height: "1000px"}}></div>
+                    <div style={styles.header}>
+                        <div style={styles.id}>
+                            aefts89ds3j33uuu
+                        </div>
+                        <div style={styles.metaData}>
+                            <div>
+                                <span>Created On: </span>
+                                <span style={styles.metaDataValue}>3 hours ago</span>
+                            </div>
+                            <div>
+                                <span>Modified On: </span>
+                                <span style={styles.metaDataValue}>1 hour ago</span>
+                            </div>
+                        </div>
+                        <button style={styles.deleteEntity} className="delete">Delete Entity</button>
                     </div>
+                    <div style={styles.content}></div>
+                    <ComponentsManager style={styles.components} />
                 </div>
             </div>
         );

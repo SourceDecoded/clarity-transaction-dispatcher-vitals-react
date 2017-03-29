@@ -1,4 +1,4 @@
-export default {
+var styles = {
     background: {
         backgroundColor: "rgb(28,28,28)"
     },
@@ -67,9 +67,32 @@ export default {
         outline: "none"
     },
     center: {
-        position:"absolute",
+        position: "absolute",
         top: "50%",
         left: "50%",
         transform: "translate(-50%,-50%)"
     }
 };
+
+styles.button = {
+    display: "inline-block",
+    borderRadius: "3px",
+    color: "rgba(255,255,255,0.75)",
+    textTransform: "uppercase",
+    height: "25px",
+    lineHeight: "25px",
+    minWidth: "75px",
+    backgroundColor: styles.secondaryColor.backgroundColor,
+    textAlign: "center",
+    boxSizing: "border-box",
+    padding: "0 15px",
+    cursor: "pointer",
+    userSelect: "none",
+    fontSize: "12px"
+}
+
+styles.buttonHover = Object.assign({}, styles.button, {
+    backgroundColor: styles.primaryColor.backgroundColor,
+});
+
+export default styles;

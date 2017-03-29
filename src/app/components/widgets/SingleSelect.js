@@ -5,7 +5,8 @@ const styles = {
     container: Object.assign({
         position: "relative",
         cursor: "pointer",
-        userSelect: "none"
+        userSelect: "none",
+        display: "inline-block"
     }, theme.input),
     placeholder: Object.assign({
         width: "100%",
@@ -49,8 +50,8 @@ export default class SingleSelect extends Component {
 
         this.state = {
             isFocused: false,
-            selectedIndex: null,
-            hoveredOption: null,
+            selectedIndex: this.props.values.indexOf(this.props.value) || null,
+            hoveredOption: null
         };
 
         this.shouldScrollToSelected = false;
@@ -73,7 +74,7 @@ export default class SingleSelect extends Component {
         this.changeCallback(this.value);
 
         this.setState({
-            selectedIndex: event.target.getAttribute("data-index")
+            selectedIndex: parseInt(event.target.getAttribute("data-index"), 10)
         });
     }
 
@@ -147,7 +148,7 @@ export default class SingleSelect extends Component {
         }
 
         return (
-            <div style={Object.assign(styles.container, this.props.style)}>
+            <div style={Object.assign({}, styles.container, this.props.style)}>
                 <div tabIndex="0" onClick={this.toggleOptions} onBlur={this.closeOptions} style={Object.assign(styles.placeholder)} onKeyDown={this.onKeyDown}>
                     <div style={Object.assign({
                         width: "100%",

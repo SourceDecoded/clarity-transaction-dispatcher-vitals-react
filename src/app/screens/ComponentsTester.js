@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import EntityManager from "../components/widgets/EntityManager";
 import Switch from "../components/widgets/Switch";
 import SingleSelect from "../components/widgets/SingleSelect";
+import PropertyManager from "../components/widgets/PropertyManager";
 import theme from "../components/styles/theme";
 
 const styles = {
@@ -12,7 +13,8 @@ const styles = {
         padding: "10px"
     },
     component: {
-        marginTop: "10px"
+        marginTop: "10px",
+        display: "block"
     }
 };
 
@@ -23,9 +25,6 @@ class Main extends Component {
         return (
             <div style={styles.container}>
                 <EntityManager style={styles.component} />
-                <Switch style={styles.component} />
-                <SingleSelect values={values} style={styles.component} />
-                <input style={Object.assign({}, styles.component, theme.input)} />
             </div>
         );
     }
