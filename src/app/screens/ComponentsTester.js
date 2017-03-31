@@ -3,6 +3,7 @@ import EntityManager from "../components/widgets/EntityManager";
 import Switch from "../components/widgets/Switch";
 import SingleSelect from "../components/widgets/SingleSelect";
 import PropertyManager from "../components/widgets/PropertyManager";
+import Loading from "../components/widgets/Loading";
 import theme from "../components/styles/theme";
 
 const styles = {
@@ -25,6 +26,7 @@ class Main extends Component {
         return (
             <div style={styles.container}>
                 <EntityManager style={styles.component} />
+                <Loading style={styles.component} />
             </div>
         );
     }

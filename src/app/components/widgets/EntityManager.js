@@ -1,10 +1,13 @@
 import React, { Component } from "react";
 import ComponentsManager from "./ComponentsManager";
+import IconButton from "./IconButton";
 import theme from "./../styles/theme";
 
 const styles = {
     container: Object.assign(
-        {},
+        {
+            position: "relative"
+        },
         theme.container,
         theme.defaultFont,
         {
@@ -51,16 +54,40 @@ const styles = {
     metaDataValue: {
         fontSize: "10px"
     },
-    deleteEntity: {
+    more: {
         position: "absolute",
-        bottom: 0,
+        top: "10px",
         right: 0
+    },
+    editContent: {
+        position: "absolute",
+        bottom: "15px",
+        right: "15px"
     }
 };
 
 export default class EntityManager extends Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            isHovered: false
+        };
+
+        this.mouseEnter = this.mouseEnter.bind(this);
+        this.mouseLeave = this.mouseLeave.bind(this);
+    }
+
+    mouseEnter() {
+        this.setState({
+            isHovered: true
+        });
+    }
+
+    mouseLeave() {
+        this.setState({
+            isHovered: false
+        });
     }
 
     render() {
@@ -69,24 +96,34 @@ export default class EntityManager extends Component {
                 <div style={styles.containerPadding}>
                     <div style={styles.header}>
                         <div style={styles.id}>
-                            aefts89ds3j33uuu
+                            {this.props.entity && this.props.entity.id || "Unknown"}
                         </div>
                         <div style={styles.metaData}>
                             <div>
                                 <span>Created On: </span>
-                                <span style={styles.metaDataValue}>3 hours ago</span>
+                                <span style={styles.metaDataValue}>{this.props.entity && this.props.entity.createdDate.toString() || "Unknown"}</span>
                             </div>
                             <div>
                                 <span>Modified On: </span>
-                                <span style={styles.metaDataValue}>1 hour ago</span>
+                                <span style={styles.metaDataValue}>{this.props.entity && this.props.entity.updatedDate.toString() || "Unknown"}</span>
                             </div>
                         </div>
-                        <button style={styles.deleteEntity} className="delete">Delete Entity</button>
+                        <div style={styles.more}>
+                            <i className="mdi-dots-vertical" style={{cursor: "pointer"}}></i>
+                        </div>
                     </div>
-                    <div style={styles.content}></div>
+                    <div style={styles.content}  onMouseEnter={this.mouseEnter} onMouseLeave={this.mouseLeave}>
+                        <IconButton style={Object.assign({
+                            display: this.state.isHovered ? "block" : "none"
+                        }, styles.editContent)} icon="pencil" color="#c65c1c" />
+                    </div>
                     <ComponentsManager style={styles.components} />
                 </div>
             </div>
         );
     }
 }
+
+EntityManager.defaultProps = {
+    entity: null
+};

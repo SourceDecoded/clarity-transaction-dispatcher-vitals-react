@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import theme from "./../styles/theme";
 import ComponentManager from "./ComponentManager";
+import IconButton from "./IconButton";
 
 const styles = {
     container: {
@@ -8,36 +9,54 @@ const styles = {
     },
     content: {
         position: "absolute",
-        top: 0,
+        bottom: 0,
         left: 0,
         right: 0,
-        bottom: "50px",
+        top: 0,
         backgroundColor: theme.primaryLayer.backgroundColor,
         overflowY: "scroll"
     },
-    footer: {
+    add: {
         position: "absolute",
-        backgroundColor: theme.secondaryLayer.backgroundColor,
-        width: "100%",
-        height: "73px",
-        lineHeight: "73px",
-        textAlign: "center",
-        bottom: 0,
-        left: 0,
-        boxShadow: "inset 0 -3px 5px rgba(0,0,0,0.3)",
+        bottom: "15px",
+        right: "25px"
     }
 };
 
 class ComponentsManager extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            isHovered: false
+        };
+
+        this.mouseEnter = this.mouseEnter.bind(this);
+        this.mouseLeave = this.mouseLeave.bind(this);
+    }
+
+    mouseEnter() {
+        this.setState({
+            isHovered: true
+        });
+    }
+
+    mouseLeave() {
+       this.setState({
+            isHovered: false
+        });
+    }
+
     render() {
         return (
-            <div style={Object.assign({}, styles.container, this.props.style)}>
+            <div style={Object.assign({}, styles.container, this.props.style)} onMouseEnter={this.mouseEnter} onMouseLeave={this.mouseLeave}>
                 <div style={styles.content}>
                     <ComponentManager />
                 </div>
-                <div style={styles.footer}>
-                    <button>Add Component</button>
-                </div>
+                <IconButton icon="plus" style={Object.assign({
+                    display: this.state.isHovered ? "block" : "none"
+                }, styles.add)} />
+                    
             </div>
         );
     }
