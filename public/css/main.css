@@ -66,3 +66,9 @@ button {
  button.delete.active {
   background-color: #8b1700;
 }
+
+i {
+    font-family: "Material Design Icons";
+    font-style: normal;
+    font-size:20px;
+}
