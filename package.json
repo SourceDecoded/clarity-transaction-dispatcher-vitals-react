@@ -6,7 +6,7 @@
     "react-scripts": "0.9.3"
   },
   "dependencies": {
-    "clarity-animation": "^1.0.20",
+    "clarity-animation": "^1.0.24",
     "clarity-react-infinite-list": "^1.0.5",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",

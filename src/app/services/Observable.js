@@ -1,5 +1,4 @@
 class Observer {
-
     constructor(callback, unbind) {
         if (typeof unbind !== "function") {
             throw new Error("There needs to be a unbind function.");
@@ -30,7 +29,7 @@ class Observer {
 
     notify(event) {
         if (!this.isDisposed && !this.isStopped) {
-            callback(event);
+            this.callback(event);
         }
     }
 }

@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import { connect, } from "react-redux";
-import { getEntitiesCount } from "../../redux/actions";
+import services from "../../services";
 import Counter from "../shared/Counter";
 
 const styles = {
@@ -44,15 +43,13 @@ class EntitiesCounterWidget extends Component {
     }
 
     componentWillMount() {
-        this.props.getEntitiesCount();
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (this.state.count !== nextProps.count) {
+        services.entityService.getEntitiesCountAsync().then(count => {
             this.setState({
-                count: nextProps.count
+                count
             });
-        }
+        }).catch(error => {
+            console.log(error);
+        });
     }
 
     render() {
@@ -71,14 +68,4 @@ class EntitiesCounterWidget extends Component {
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-        count: state.entitiesCount
-    };
-};
-
-const mapDispatchToProps = {
-    getEntitiesCount
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(EntitiesCounterWidget);
+export default EntitiesCounterWidget;

@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import { connect, } from "react-redux";
-import { getLatestUptime } from "../../redux/actions";
+import services from "../../services";
 import DonutGraph from "../graphs/DonutGraph";
 
 const styles = {
@@ -47,12 +46,8 @@ class UptimeWidget extends Component {
     }
 
     componentWillMount() {
-        setInterval(this.props.getLatestUptime(), 1000 * 60 * 60);
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (this.state.startDate !== nextProps.uptime.startDate) {
-            const startDate = new Date(nextProps.uptime.startDate);
+        services.uptimeService.getLatestUptimeAsync().then(uptime => {
+            const startDate = new Date(uptime.startDate);
             const currentDate = new Date();
             const totalUptimeHours = Math.floor((currentDate - startDate) / 1000 / 60 / 60);
 
@@ -62,7 +57,7 @@ class UptimeWidget extends Component {
                 hours: totalUptimeHours % 24,
                 startDateString: startDate.toDateString() + " " + startDate.toLocaleTimeString()
             });
-        }
+        })
     }
 
     render() {
@@ -81,14 +76,4 @@ class UptimeWidget extends Component {
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-        uptime: state.uptime,
-    };
-};
-
-const mapDispatchToProps = {
-    getLatestUptime
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(UptimeWidget);
+export default UptimeWidget;

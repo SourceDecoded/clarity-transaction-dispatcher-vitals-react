@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import { connect, } from "react-redux";
-import { getWeeklyTransactionCounts } from "../../redux/actions";
+import services from "../../services";
 import VerticalBarGraph from "../graphs/VerticalBarGraph";
 
 const styles = {
@@ -64,15 +63,11 @@ class MultiGraphWidget extends Component {
     }
 
     componentWillMount() {
-        this.props.getWeeklyTransactionCounts()
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (this.state.weeklyCounts !== nextProps.weeklyCounts) {
+        services.transactionService.getWeeklyTransactionCountsAsync().then(weeklyCounts => {
             this.setState({
-                weeklyCounts: nextProps.weeklyCounts
+                weeklyCounts
             });
-        }
+        });
     }
 
     render() {
@@ -91,14 +86,4 @@ class MultiGraphWidget extends Component {
 
 };
 
-const mapStateToProps = (state) => {
-    return {
-        weeklyCounts: state.weeklyTransactionCounts
-    };
-};
-
-const mapDispatchToProps = {
-    getWeeklyTransactionCounts
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(MultiGraphWidget);
+export default MultiGraphWidget;

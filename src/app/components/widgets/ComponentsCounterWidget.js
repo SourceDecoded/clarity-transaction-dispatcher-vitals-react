@@ -1,6 +1,4 @@
 import React, { Component } from "react";
-import { connect, } from "react-redux";
-import { getComponentsCount } from "../../redux/actions";
 import Counter from "../shared/Counter";
 
 const styles = {
@@ -43,18 +41,6 @@ class ComponentsCounterWidget extends Component {
         }
     }
 
-    componentWillMount() {
-        this.props.getComponentsCount();
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (this.state.count !== nextProps.count) {
-            this.setState({
-                count: nextProps.count
-            });
-        }
-    }
-
     render() {
         return (
             <div style={this.props.style}>
@@ -71,14 +57,4 @@ class ComponentsCounterWidget extends Component {
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-        count: state.componentsCount
-    };
-};
-
-const mapDispatchToProps = {
-    getComponentsCount
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(ComponentsCounterWidget);
+export default ComponentsCounterWidget;

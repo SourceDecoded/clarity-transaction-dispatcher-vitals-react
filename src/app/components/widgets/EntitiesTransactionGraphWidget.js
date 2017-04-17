@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import { connect, } from "react-redux";
-import { getEntitiesTransactionCounts } from "../../redux/actions";
+import services from "../../services";
 import VerticalBarGraph from "../graphs/VerticalBarGraph";
 
 const styles = {
@@ -73,15 +72,18 @@ class EntitiesTransactionGraphWidget extends Component {
     }
 
     componentWillMount() {
-        this.props.getEntitiesTransactionCounts();
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (this.state.counts !== nextProps.counts) {
+        services.transactionService.getEntitiesTransactionCountsAsync().then(entityCounts => {
             this.setState({
-                counts: nextProps.counts
+                counts: {
+                    added: entityCounts.added,
+                    updated: entityCounts.updated,
+                    removed: entityCounts.removed,
+                    retrieved: entityCounts.retrieved,
+                }
             });
-        }
+        }).catch(error => {
+            console.log(error);
+        });
     }
 
     render() {
@@ -99,14 +101,4 @@ class EntitiesTransactionGraphWidget extends Component {
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-        counts: state.entitiesTransactionCounts
-    };
-};
-
-const mapDispatchToProps = {
-    getEntitiesTransactionCounts
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(EntitiesTransactionGraphWidget);
+export default EntitiesTransactionGraphWidget;

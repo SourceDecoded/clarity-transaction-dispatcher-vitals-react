@@ -1,6 +1,4 @@
 import React, { Component } from "react";
-import { connect, } from "react-redux";
-import { getComponentsTransactionCounts } from "../../redux/actions";
 import VerticalBarGraph from "../graphs/VerticalBarGraph";
 
 const styles = {
@@ -72,18 +70,6 @@ class ComponentsTransactionGraphWidget extends Component {
         ];
     }
 
-    componentWillMount() {
-        this.props.getComponentsTransactionCounts();
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (this.state.counts !== nextProps.counts) {
-            this.setState({
-                counts: nextProps.counts
-            });
-        }
-    }
-
     render() {
         this._configureGraph();
         const totalTransactions = this.items.map((item) => item.value).reduce((prevItem, item) => prevItem + item);
@@ -99,14 +85,4 @@ class ComponentsTransactionGraphWidget extends Component {
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-        counts: state.componentsTransactionCounts
-    };
-};
-
-const mapDispatchToProps = {
-    getComponentsTransactionCounts
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(ComponentsTransactionGraphWidget);
+export default ComponentsTransactionGraphWidget;

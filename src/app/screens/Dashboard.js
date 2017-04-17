@@ -1,9 +1,6 @@
 import React, { Component } from "react";
 import io from "socket.io-client";
-import { connect, } from "react-redux";
 import { socketMonitorServer } from "../../configs/EnvironmentVariables";
-import { getComponentsCount, getEntitiesCount } from "../redux/actions";
-
 import MultiGraphWidget from "../components/widgets/MultiGraphWidget";
 import UptimeWidget from "../components/widgets/UptimeWidget";
 import EntitiesTransactionGraphWidget from "../components/widgets/EntitiesTransactionGraphWidget";
@@ -111,11 +108,6 @@ class Dashboard extends Component {
         this._entityUpdatedEvent = this._entityUpdatedEvent.bind(this);
         this._entityRemovedEvent = this._entityRemovedEvent.bind(this);
         this._entityRetrievedEvent = this._entityRetrievedEvent.bind(this);
-        this._entityContentUpdatedEvent = this._entityContentUpdatedEvent.bind(this);
-        this._componentAddedEvent = this._componentAddedEvent.bind(this);
-        this._componentUpdatedEvent = this._componentUpdatedEvent.bind(this);
-        this._componentRemovedEvent = this._componentRemovedEvent.bind(this);
-        this._componentRetrievedEvent = this._componentRetrievedEvent.bind(this);
     }
 
     _entityAddedEvent(transaction) {
@@ -156,52 +148,6 @@ class Dashboard extends Component {
         });
     }
 
-    _entityContentUpdatedEvent(transaction) {
-        this.setState((prevState) => {
-            return {
-                todaysTransactionCount: prevState.todaysTransactionCount + 1
-            }
-        });
-    }
-
-    _componentAddedEvent(transaction) {
-        this.setState((prevState) => {
-            return {
-                componentsCount: prevState.componentsCount + 1,
-                todaysTransactionCount: prevState.todaysTransactionCount + 1,
-                componentsTransactionCounts: Object.assign({}, prevState.componentsTransactionCounts, { added: prevState.componentsTransactionCounts.added + 1 })
-            }
-        });
-    }
-
-    _componentUpdatedEvent(transaction) {
-        this.setState((prevState) => {
-            return {
-                todaysTransactionCount: prevState.todaysTransactionCount + 1,
-                componentsTransactionCounts: Object.assign({}, prevState.componentsTransactionCounts, { updated: prevState.componentsTransactionCounts.updated + 1 })
-            }
-        });
-    }
-
-    _componentRemovedEvent(transaction) {
-        this.setState((prevState) => {
-            return {
-                componentsCount: prevState.componentsCount - 1,
-                todaysTransactionCount: prevState.todaysTransactionCount + 1,
-                componentsTransactionCounts: Object.assign({}, prevState.componentsTransactionCounts, { removed: prevState.componentsTransactionCounts.removed + 1 })
-            }
-        });
-    }
-
-    _componentRetrievedEvent(transaction) {
-        this.setState((prevState) => {
-            return {
-                todaysTransactionCount: prevState.todaysTransactionCount + 1,
-                componentsTransactionCounts: Object.assign({}, prevState.componentsTransactionCounts, { retrieved: prevState.componentsTransactionCounts.retrieved + 1 })
-            }
-        });
-    }
-
     _streamedLogEvent(log) {
         this.setState({
             streamedLog: log
@@ -214,12 +160,7 @@ class Dashboard extends Component {
                 "entityAdded": this._entityAddedEvent,
                 "entityUpdated": this._entityUpdatedEvent,
                 "entityRemoved": this._entityRemovedEvent,
-                "entityRetrieved": this._entityRetrievedEvent,
-                "entityContentUpdated": this._entityContentUpdatedEvent,
-                "entityComponentAdded": this._componentAddedEvent,
-                "entityComponentUpdated": this._componentUpdatedEvent,
-                "entityComponentRemoved": this._componentRemovedEvent,
-                "entityComponentRetrieved": this._componentRetrievedEvent
+                "entityRetrieved": this._entityRetrievedEvent
             };
 
             if (events[data.transaction.type]) {
@@ -269,16 +210,4 @@ class Dashboard extends Component {
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-        componentsCount: state.componentsCount,
-        entitiesCount: state.entitiesCount
-    };
-};
-
-const mapDispatchToProps = {
-    getComponentsCount,
-    getEntitiesCount
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
+export default Dashboard;
